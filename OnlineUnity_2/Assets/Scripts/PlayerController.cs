@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private CharacterController cc = null;
     private CollisionFlags cf = CollisionFlags.None;
+    private float gravity = 9.8f;
+    private float verticalSpeed = 0.0f;
+    private bool movable = true;
 
     [Header("Animation Properties")]
     public AnimationClip idle = null;
@@ -65,6 +68,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         BodyDirectionChange();
+        ApplyGravity();
         AnimationControl();
         CheckState();
         InputControl();
@@ -72,6 +76,8 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
+        if (!movable) return;
+    
         Transform cameraTransform = Camera.main.transform;
         Vector3 verticalMove = cameraTransform.TransformDirection(Vector3.forward);
         verticalMove.y = 0;
@@ -87,7 +93,9 @@ public class PlayerController : MonoBehaviour
         if (state == PlayerState.run)
             speed = runSpeed;
 
-        Vector3 moveAmount = (moveDirection * speed * Time.deltaTime);
+        Vector3 gravityVector = new Vector3(0.0f, verticalSpeed, 0.0f);
+
+        Vector3 moveAmount = (moveDirection * speed * Time.deltaTime) + gravityVector;
         cf = cc.Move(moveAmount);
     }
     
@@ -169,9 +177,10 @@ public class PlayerController : MonoBehaviour
                     state = PlayerState.idle;
                 break;
             case PlayerState.attack:
-                
+                movable = false;
                 break;
             case PlayerState.skill:
+                movable = false;
                 break;
         }
     }
@@ -235,6 +244,7 @@ public class PlayerController : MonoBehaviour
         {
             state = PlayerState.idle;
             attackState = AttackState.attack_1;
+            movable = true;
         }
     }
 
@@ -265,10 +275,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void ApplyGravity()
+    {
+        if((cf & CollisionFlags.CollidedBelow) != 0)
+        {
+            verticalSpeed = 0.0f;
+        }
+        else
+        {
+            verticalSpeed = -gravity * Time.deltaTime;
+        }
+    }
+
     private void OnGUI()
     {
         GUILayout.Label("current speed: " + GetAcceleration().ToString());
         GUILayout.Label("current velocity vector: " + cc.velocity.ToString());
         GUILayout.Label("current velocity manitude: " + cc.velocity.magnitude.ToString());
+        GUILayout.Label("collision flag: " + cf.ToString());
     }
 }

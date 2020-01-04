@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\HOTween\_Demo\HOTweenDemoBrain.cs" />
-    <Compile Include="Assets\Scripts\AnimationEventTest.cs" />
+    <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <None Include="Assets\HOTween\readme.txt" />
     <None Include="Assets\Effect Assets\Vectormania\readme.txt" />
