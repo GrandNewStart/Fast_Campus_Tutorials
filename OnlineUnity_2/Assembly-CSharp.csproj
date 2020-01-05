@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\testA.cs" />
     <Compile Include="Assets\Scripts\testB.cs" />
     <Compile Include="Assets\Scripts\testC.cs" />
+    <Compile Include="Assets\Scripts\TweenerSample.cs" />
     <None Include="Assets\HOTween\readme.txt" />
     <None Include="Assets\Effect Assets\Vectormania\readme.txt" />
     <None Include="Assets\Effect Assets\DynamicElements_Effects\readme.txt" />
