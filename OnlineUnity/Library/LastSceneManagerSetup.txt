@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/90.Shooting/Scenes/Level1.unity
+- path: C:/Users/jinwo/Desktop/Unity/Fast_Campus_Tutorials/OnlineUnity_2/Assets/Scenes/test.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
