@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Holoville.HOTween;
 
 public class GoblinController : MonoBehaviour
 {
@@ -22,7 +23,10 @@ public class GoblinController : MonoBehaviour
     [Header("Combat Properties")]
     public int HP = 100;
     public float attackRange = 1.5f;
-    public GameObject effect = null;
+    public GameObject damageEffect = null;
+    public GameObject DieEffect = null;
+    private Tweener effectTweener = null;
+    private SkinnedMeshRenderer skinnedMeshRenderer = null;
 
 
     void OnAttackFinish()
@@ -36,6 +40,8 @@ public class GoblinController : MonoBehaviour
     void OnDieFinish()
     {
         Debug.Log("Die Animation Finished");
+        //Instantiate(DieEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 
     void AddAnimationEvent(AnimationClip clip, string functionName)
@@ -78,6 +84,7 @@ public class GoblinController : MonoBehaviour
                 randomTarget.y = raycastHit.point.y;
             }
 
+            target.transform.position = randomTarget;
             state = goblinState.patrol;
         }
         else
@@ -100,7 +107,7 @@ public class GoblinController : MonoBehaviour
 
                     if (diff.magnitude > attackRange)
                     {
-                        StartCoroutine(WaitUpadate());
+                        StartCoroutine(WaitUpdate());
                         return;
                     }
 
@@ -136,7 +143,7 @@ public class GoblinController : MonoBehaviour
         transform.LookAt(lookAtPositon);
     }
 
-    IEnumerator WaitUpadate()
+    IEnumerator WaitUpdate()
     {
         state = goblinState.wait;
         float waitTime = Random.Range(1.0f, 3.0f);
@@ -144,9 +151,53 @@ public class GoblinController : MonoBehaviour
         state = goblinState.idle;
     }
 
+    void OnSetTarget(GameObject obj)
+    {
+        target = obj;
+        state = goblinState.move;
+    }
+
     void AttackUpdate()
     {
+        float distance = Vector3.Distance(target.transform.position, transform.position);
+        if(distance > attackRange + 0.5f)
+        {
+            state = goblinState.move;
+        }
+    }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player Attack"))
+        {
+            HP -= 10;
+            if (HP > 0)
+            {
+                anim.CrossFade(damage.name);
+                //Instantiate(damageEffect, other.transform.position, Quaternion.identity);
+                DamageTweenEffect();
+            }
+            else
+                state = goblinState.die;
+        }
+    }
+
+    void DamageTweenEffect()
+    {
+        if(effectTweener != null && !effectTweener.isComplete)
+        {
+            return;
+        }
+
+        Color colorTo = Color.red;
+        effectTweener = HOTween.To(skinnedMeshRenderer.material, 0.2f, new TweenParms().Prop("color", colorTo)
+            .Loops(1, LoopType.Yoyo)
+            .OnStepComplete(OnDamageTweenFinish));
+    }
+
+    void OnDamageTweenFinish()
+    {
+        skinnedMeshRenderer.material.color = Color.white;
     }
 
     void AnimationControl()
@@ -185,6 +236,8 @@ public class GoblinController : MonoBehaviour
         AddAnimationEvent(attack, "OnAttackFinish");
         AddAnimationEvent(damage, "OnDamageFinish");
         AddAnimationEvent(die, "OnDieFinish");
+
+        skinnedMeshRenderer = transform.Find("body").GetComponent<SkinnedMeshRenderer>();
     }
 
     private void Update()

@@ -355,13 +355,14 @@ GameObject:
   - component: {fileID: 111140704919431212}
   - component: {fileID: 742901092}
   - component: {fileID: 742901091}
+  - component: {fileID: 1308582814}
   m_Layer: 0
   m_Name: M001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4018702151084540
 Transform:
   m_ObjectHideFlags: 0
@@ -437,6 +438,29 @@ CapsuleCollider:
   m_Height: 1.4
   m_Direction: 1
   m_Center: {x: 0, y: 0.7, z: 0}
+--- !u!114 &1308582814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300875070013594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635c9c8829527ce48bc8690eda0715f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
+  target: {fileID: 0}
+  idle: {fileID: 7400000, guid: 0e1b3b2533c666d46a01c2027f9fc9a6, type: 3}
+  move: {fileID: 7400000, guid: 80271b9cbbb8d444c9293c0358cf120e, type: 3}
+  attack: {fileID: 7400000, guid: 0f914b6655f550749ba71eba932a15d6, type: 3}
+  damage: {fileID: 7400000, guid: f78fcb3ac9be8e344a3da71a2c2244cc, type: 3}
+  die: {fileID: 7400000, guid: d4048f0afa666c04187b9b2d44c2d51a, type: 3}
+  HP: 100
+  attackRange: 1.5
+  damageEffect: {fileID: 0}
+  DieEffect: {fileID: 0}
 --- !u!1 &1304397002045172
 GameObject:
   m_ObjectHideFlags: 0

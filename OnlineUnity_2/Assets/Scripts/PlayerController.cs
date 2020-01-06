@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     public AnimationClip attack_2 = null;
     public AnimationClip attack_3 = null;
     public AnimationClip attack_4 = null;
+    public AnimationClip sAttack = null;
     private Animation anim = null;
 
     public enum PlayerState { none, idle, walk, run, attack, skill }
@@ -40,7 +41,11 @@ public class PlayerController : MonoBehaviour
     public AttackState attackState = AttackState.attack_1;
     public bool nextAttack = false;
 
-    // Start is called before the first frame update
+    [Header("Combat Properties")]
+    public TrailRenderer attackTrailRenderer = null;
+    public CapsuleCollider attackCapsuleCollider = null;
+    public GameObject skillEffect = null;
+
     void Start()
     {
         cc = GetComponent<CharacterController>();
@@ -56,14 +61,16 @@ public class PlayerController : MonoBehaviour
         anim[attack_2.name].wrapMode = WrapMode.Once;
         anim[attack_3.name].wrapMode = WrapMode.Once;
         anim[attack_4.name].wrapMode = WrapMode.Once;
+        anim[sAttack.name].wrapMode = WrapMode.Once;
 
         AddAnimationEvent(attack_1, "OnAttackAnimationFinish");
         AddAnimationEvent(attack_2, "OnAttackAnimationFinish");
         AddAnimationEvent(attack_3, "OnAttackAnimationFinish");
         AddAnimationEvent(attack_4, "OnAttackAnimationFinish");
+        AddAnimationEvent(sAttack, "OnSkillAnimFinish");
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         Move();
@@ -72,6 +79,7 @@ public class PlayerController : MonoBehaviour
         AnimationControl();
         CheckState();
         InputControl();
+        AttackComponentControl();
     }
 
     void Move()
@@ -148,7 +156,7 @@ public class PlayerController : MonoBehaviour
                 AttackAnimationControl();
                 break;
             case PlayerState.skill:
-
+                AnimationPlay(sAttack);
                 break;
 
         }
@@ -217,6 +225,15 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        if (Input.GetMouseButton(1))
+        {
+            if (state == PlayerState.attack)
+            {
+                attackState = AttackState.attack_1;
+                nextAttack = false;
+            }
+            state = PlayerState.skill;
+        }
     }
 
     void OnAttackAnimationFinish()
@@ -246,6 +263,15 @@ public class PlayerController : MonoBehaviour
             attackState = AttackState.attack_1;
             movable = true;
         }
+    }
+
+    void OnSkillAnimFinish()
+    {
+        //Vector3 position = transform.position;
+        //position += transform.forward * 2.0f;
+        //Instantiate(skillEffect, position, Quaternion.identity);
+        state = PlayerState.idle;
+        movable = true;
     }
 
     void AddAnimationEvent(AnimationClip clip, string functionName)
@@ -286,12 +312,21 @@ public class PlayerController : MonoBehaviour
             verticalSpeed = -gravity * Time.deltaTime;
         }
     }
-
-    private void OnGUI()
+    
+    void AttackComponentControl()
     {
-        GUILayout.Label("current speed: " + GetAcceleration().ToString());
-        GUILayout.Label("current velocity vector: " + cc.velocity.ToString());
-        GUILayout.Label("current velocity manitude: " + cc.velocity.magnitude.ToString());
-        GUILayout.Label("collision flag: " + cf.ToString());
+        switch (state)
+        {
+            case PlayerState.attack:
+            case PlayerState.skill:
+                attackTrailRenderer.enabled = true;
+                attackCapsuleCollider.enabled = true;
+                break;
+            default:
+                attackTrailRenderer.enabled = false;
+                attackCapsuleCollider.enabled = false;
+                break;
+        }
+
     }
 }

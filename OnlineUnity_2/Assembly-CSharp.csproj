@@ -66,11 +66,13 @@
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CoroutineSample.cs" />
     <Compile Include="Assets\Scripts\GoblinController.cs" />
+    <Compile Include="Assets\Scripts\MonsterSpawner.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\RaycastSample.cs" />
     <Compile Include="Assets\Scripts\testA.cs" />
     <Compile Include="Assets\Scripts\testB.cs" />
     <Compile Include="Assets\Scripts\testC.cs" />
+    <Compile Include="Assets\Scripts\TriggerDetector.cs" />
     <Compile Include="Assets\Scripts\TweenerSample.cs" />
     <None Include="Assets\HOTween\readme.txt" />
     <None Include="Assets\Effect Assets\Vectormania\readme.txt" />
