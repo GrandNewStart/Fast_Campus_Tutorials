@@ -24,7 +24,7 @@ public class Packet : MonoBehaviour
 
     public static Packet FromByteArray(byte[] input)
     {
-        MemoryStream stream = new MemoryStream();
+        MemoryStream stream = new MemoryStream(input);
         BinaryFormatter formatter = new BinaryFormatter();
         Packet packet = new Packet();
         packet.mouseX = (float)formatter.Deserialize(stream);
